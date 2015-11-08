@@ -1,3 +1,5 @@
+#load data
+#As written, must be run in same directory as data table.
 x <- read.table("household_power_consumption.txt", sep=";", 
                 na.strings= "?", header=TRUE, nrows=2075259,
                 colClasses = c("character", "character", "numeric", "numeric", "numeric", 
@@ -6,10 +8,13 @@ x <- read.table("household_power_consumption.txt", sep=";",
 # Hardcoded because lazy, had difficulties with 
 # more flexible subsetting for some reason.
 x <- x[66637:69517,]
+# Here we add a datetime column which uses strpt to generate POSIXlt
+# representatives for the dates and times of the trials
 datetime <- cbind(x$Date, x$Time)
 datetime <- paste(datetime[,1], datetime[,2], sep=" ")
 datetime <- strptime(datetime, format="%d/%m/%Y %H:%M:%S")
 cbind(datetime, x)
+# Plotting the graph. Plot labels could be adjusted probably
 par(mfrow = c(2, 2), mar=c(4, 4, 2 ,1), oma = c(0, 0, 2, 0))
 with(x, {
   plot(datetime, Global_active_power, type="l", 
